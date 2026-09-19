@@ -47,7 +47,12 @@ ktess/
 │   ├── build.gradle.kts
 │   └── src/
 │       ├── main/kotlin/com/personal/ktess/
-│       │   └── ...              # board, movegen, state, notation, search, analysis (por fase)
+│       │   ├── board/           # Piece, Position, Board (mailbox 8x8) — Fase 0
+│       │   ├── movegen/         # geração de movimentos por peça, pseudo-legais e legais — Fases 1-2
+│       │   ├── state/           # GameState, xeque-mate/afogamento, regras de empate — Fase 3
+│       │   ├── notation/        # parser/serializador de FEN, notação SAN, perft — Fase 4
+│       │   ├── search/          # avaliação, minimax + poda alfa-beta, iterative deepening — Fase 5
+│       │   └── analysis/        # PositionAnalysis (score, veredito, melhor movimento) — Fase 6
 │       └── test/kotlin/         # espelha o main, 1:1
 └── app/                         # camada Spring Boot, a partir da Fase 7
     ├── build.gradle.kts
