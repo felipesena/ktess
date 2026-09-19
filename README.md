@@ -26,6 +26,46 @@ duplo de:
   (TDD do motor), `nvim-dap`/`jdtls` (debug), `kulala.nvim` (testar endpoints
   HTTP a partir da Fase 7)
 
+## Estrutura de pastas
+
+```
+ktess/
+├── settings.gradle.kts          # declara os subprojetos (engine, app)
+├── gradle.properties
+├── gradlew, gradlew.bat
+├── gradle/
+│   ├── libs.versions.toml       # version catalog — versões centralizadas
+│   └── wrapper/
+├── build-logic/                 # convention plugins compartilhados (composite build)
+│   ├── settings.gradle.kts
+│   ├── build.gradle.kts
+│   └── src/main/kotlin/
+│       ├── buildlogic.kotlin-common-conventions.gradle.kts
+│       ├── buildlogic.kotlin-library-conventions.gradle.kts
+│       └── buildlogic.kotlin-application-conventions.gradle.kts
+├── engine/                      # motor: lib Kotlin pura, sem Spring
+│   ├── build.gradle.kts
+│   └── src/
+│       ├── main/kotlin/com/personal/ktess/
+│       │   └── ...              # board, movegen, state, notation, search, analysis (por fase)
+│       └── test/kotlin/         # espelha o main, 1:1
+└── app/                         # camada Spring Boot, a partir da Fase 7
+    ├── build.gradle.kts
+    └── src/
+        ├── main/kotlin/com/personal/ktess/app/
+        └── test/kotlin/
+```
+
+`.gradle/`, `.kotlin/` e `build/` são diretórios gerados (cache do Gradle,
+dados do plugin Kotlin, saída de build) — ficam fora do controle de versão
+via `.gitignore`, por isso não aparecem na árvore acima.
+
+`build-logic/` centraliza plugins de convenção do Gradle (versão de Kotlin,
+toolchain de JVM, repositórios, configuração de teste) compartilhados entre
+`engine/` e `app/`, evitando duplicar essa configuração em cada
+`build.gradle.kts` — é um *composite build* separado, referenciado em
+`settings.gradle.kts` via `includeBuild("build-logic")`.
+
 ## Representação de dados
 
 - Tabuleiro: **mailbox** (`Array<Array<Piece?>>`, 8x8) — prioriza legibilidade
