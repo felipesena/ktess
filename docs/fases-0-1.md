@@ -22,9 +22,11 @@ fluxo de chamadas.
 ```kotlin
 data class Position(val file: Int, val rank: Int) {
     companion object {
+        /** Converte notação algébrica ("e4") para Position. */
         fun fromAlgebraic(s: String): Position
     }
 
+    /** Converte a Position de volta para notação algébrica ("e4"). */
     fun toAlgebraic(): String
 }
 ```
@@ -38,14 +40,21 @@ enum class PieceColor { WHITE, BLACK }
 
 ```kotlin
 class Board {
+    /** Retorna a peça na casa informada, ou null se estiver vazia. */
     operator fun get(pos: Position): Piece?
+
+    /** Retorna uma nova instância de Board com a casa alterada, sem mutar a atual. */
     fun with(pos: Position, piece: Piece?): Board
 
     companion object {
+        /** Cria um tabuleiro sem nenhuma peça. */
         fun empty(): Board
+
+        /** Cria um tabuleiro com as 32 peças na posição inicial padrão do xadrez. */
         fun initialPosition(): Board
     }
 
+    /** Gera a representação em texto do tabuleiro (pretty-print). */
     override fun toString(): String
 }
 ```
@@ -100,6 +109,11 @@ data class Move(
 
 ```kotlin
 object MoveGenerator {
+    /**
+     * Gera os movimentos geometricamente possíveis para a peça na casa
+     * `from`, de acordo com o seu tipo, sem checar se deixam o próprio
+     * rei em xeque (isso é responsabilidade da Fase 2).
+     */
     fun pseudoLegalMoves(board: Board, from: Position): List<Move>
 }
 ```
